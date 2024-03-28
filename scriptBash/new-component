@@ -1,0 +1,57 @@
+#!/bin/bash
+
+# Função para imprimir texto colorido
+print_color_text() {
+    # Argumentos: $1 = texto, $2 = cor
+    echo -e "\e[$2m$1\e[0m"
+}
+
+# Pergunta ao usuário o nome da pasta a ser criada
+print_color_text "Digite o nome da pasta:" "35"
+read -p "$(print_color_text ">" "35") " folder_name
+
+# Pergunta ao usuário a extensão do arquivo (typescript ou javascript)
+print_color_text "Escolha a extensão do arquivo (t para Typescript ou j para Javascript):" "36"
+read -n 1 extension_choice
+
+# Converte a escolha da extensão para a extensão completa (tsx ou jsx)
+if [[ $extension_choice == "t" ]]; then
+    file_extension="tsx"
+elif [[ $extension_choice == "j" ]]; then
+    file_extension="jsx"
+else
+    print_color_text "\nOpção inválida. Escolha 't' para Typescript ou 'j' para Javascript." "31"
+    exit 1
+fi
+
+# Cria a pasta
+mkdir "$folder_name"
+
+# Entra na pasta criada
+cd "$folder_name" || exit
+
+# Cria o arquivo com a extensão escolhida
+touch "${folder_name^}.${file_extension}"
+
+# Estrutura básica para o arquivo TSX ou JSX, dependendo da escolha do usuário
+echo -e "import './${folder_name}.css';
+
+export function ${folder_name^}() {
+    return (
+        <>
+            <h1 className=\"teste\">${folder_name}</h1>
+        </>
+    );
+}" > "${folder_name^}.${file_extension}"
+
+# Cria também o arquivo CSS correspondente
+touch "${folder_name}.css"
+
+# Define as regras de estilo CSS
+echo -e ".teste {
+    background-color: pink;
+}" > "${folder_name}.css"
+
+# Mensagem de confirmação
+print_color_text "\nPasta '$folder_name' criada com sucesso e arquivo ${folder_name^}.${file_extension} foi adicionado." "32"
+

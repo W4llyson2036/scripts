@@ -1,0 +1,50 @@
+#!/bin/bash
+
+# Função para imprimir texto colorido
+print_color_text() {
+    # Argumentos: $1 = texto, $2 = cor
+    echo -e "\e[$2m$1\e[0m"
+}
+
+# Função para criar uma pasta se a resposta for 'y'
+create_folder() {
+    local folder_name="$1"
+    print_color_text "Criar pasta $folder_name?" "33"
+    read -p " (y/n): " response
+    if [[ -n "$response" && $response == "y" ]]; then
+        mkdir -p "$folder_name"
+        print_color_text "Pasta $folder_name criada com sucesso!" "32"
+    elif [[ $response == "n" ]]; then
+        print_color_text "Pasta $folder_name não foi criada." "31"
+    else
+        print_color_text "Resposta inválida. Por favor, responda 'y' para sim ou 'n' para não." "31"
+    fi
+}
+
+# Cria automaticamente as pastas "src/components" e "src/style"
+mkdir -p src/style
+
+# Cria a pasta "src/components" e "src/components/ui"
+mkdir -p src/components src/components/ui
+print_color_text "Pasta src/components/ui criada com sucesso!" "32"
+
+# Pergunta ao usuário para cada pasta (exceto "src/components/ui" e "src/style") se deseja criar
+create_folder "src/layout"
+create_folder "src/pages"
+create_folder "src/store"
+create_folder "src/utils"
+create_folder "src/hooks"
+create_folder "src/service/api"
+create_folder "src/routes"
+
+# Cria os arquivos CSS necessários
+touch \
+    src/style/index.css \
+    src/style/variables.css \
+    src/service/nada.txt \
+    src/components/nada.txt \
+    src/components/ui/nada.txt
+
+# Mensagem de confirmação
+print_color_text "Estrutura de pastas e arquivos criada com sucesso!" "32"
+
